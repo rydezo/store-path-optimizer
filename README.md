@@ -8,3 +8,7 @@ The program uses the map of a generic Walmart supercenter to calculate the short
 ### Map
 ![walmart store layout](https://github.com/user-attachments/assets/2c481088-b4fc-4c8e-9742-65836a8d3f02)
 <sub>*source: https://www.flickr.com/photos/139188400@N08/53807428653*</sub>
+
+### Gridded Map
+![grid walmart store layout](https://github.com/user-attachments/assets/e6cbf47f-f847-47bb-ae45-deac0e851b21)
+<sub>The x and y axes are on the bottom and left of the map, respectively.
