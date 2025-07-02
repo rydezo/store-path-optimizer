@@ -1,4 +1,8 @@
-# Store coordinates for each section in the store
+# import matplotlib for coordinate data visualization and sqrt function for distance calculation
+import matplotlib.pyplot as plt
+from math import sqrt
+
+# store coordinates for each section in the store
 store_coords = {
     # blue sections
     "Entrance Left": (6, 0),
@@ -50,3 +54,56 @@ store_coords = {
     "Tenant": (11, 1),
     "Hair Salon": (12, 1),
 }
+
+# plot the store layout
+def plot_store_layout(coords):
+    plt.figure(figsize=(12, 8))
+    for section, (x, y) in coords.items():
+        plt.scatter(x, y, label=section)
+        plt.text(x + 0.1, y + 0.1, section, fontsize=8)
+
+    plt.title("Store Layout")
+    plt.xlabel("X Coordinate")
+    plt.ylabel("Y Coordinate")
+    plt.grid(True)
+    plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
+    plt.xlim(0, 20)
+    plt.ylim(-1, 10)
+    plt.show()
+
+plot_store_layout(store_coords)
+
+# find shortest path
+def find_shortest_path(start_entrance, section_list):
+    path = []
+    visited = {}
+    current_section = start_entrance
+    for section in section_list:
+        distance = sqrt(
+            (store_coords[current_section][0] - store_coords[section][0]) ** 2 +
+            (store_coords[current_section][1] - store_coords[section][1]) ** 2
+        )
+
+
+# potential deque algorithm
+'''
+def find_shortest_path(start_entrance, section_list):
+    from collections import deque
+
+    # BFS to find shortest path
+    queue = deque([(start_entrance, [start_entrance])])
+    visited = {}
+
+    while queue:
+        current_section, path = queue.popleft()
+        if current_section in section_list:
+            return path
+        
+        visited.add(current_section)
+
+        for neighbor in store_coords.keys():
+            if neighbor not in visited and neighbor != current_section:
+                queue.append((neighbor, path + [neighbor]))
+
+    return None
+'''
