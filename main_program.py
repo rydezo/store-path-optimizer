@@ -76,34 +76,28 @@ plot_store_layout(store_coords)
 # find shortest path
 def find_shortest_path(start_entrance, section_list):
     path = []
-    visited = {}
+    visited = set()
     current_section = start_entrance
-    for section in section_list:
-        distance = sqrt(
-            (store_coords[current_section][0] - store_coords[section][0]) ** 2 +
-            (store_coords[current_section][1] - store_coords[section][1]) ** 2
-        )
-
-
-# potential deque algorithm
-'''
-def find_shortest_path(start_entrance, section_list):
-    from collections import deque
-
-    # BFS to find shortest path
-    queue = deque([(start_entrance, [start_entrance])])
-    visited = {}
-
-    while queue:
-        current_section, path = queue.popleft()
-        if current_section in section_list:
-            return path
-        
+    while len(path) < len(section_list):
+        distances = dict()
+        for section in section_list:
+            # check if section exists and has not been visited
+            if section not in store_coords:
+                print(f"Section '{section}' not found in store coordinates.")
+                continue
+            if section in visited:
+                continue
+            # use distance formula to calculate distance between sections
+            distance = sqrt(
+                (store_coords[current_section][0] - store_coords[section][0]) ** 2 +
+                (store_coords[current_section][1] - store_coords[section][1]) ** 2
+            )
+            distances[section] = distance
+        # find the closest section
+        closest_section = min(distances, key=distances.get)
+        path.append(closest_section)
+        current_section = closest_section
         visited.add(current_section)
 
-        for neighbor in store_coords.keys():
-            if neighbor not in visited and neighbor != current_section:
-                queue.append((neighbor, path + [neighbor]))
-
-    return None
-'''
+    path.append("Checkout")  # always end at Checkout
+    return path
