@@ -81,11 +81,14 @@ def find_shortest_path(start_entrance, section_list):
     while len(path) < len(section_list):
         distances = dict()
         for section in section_list:
-            # check if section exists and has not been visited
-            if section not in store_coords:
-                print(f"Section '{section}' not found in store coordinates.")
-                continue
+            # check if section has not been visited and exists in store coordinates
             if section in visited:
+                continue
+            if section not in store_coords:
+                print(f"Section '{section}' not found in store coordinates. Please input your section again.")
+                section_list.remove(section)
+                new_section = input("Enter a valid section to visit: ").strip()
+                section_list.append(new_section.title())
                 continue
             # use distance formula to calculate distance between sections
             distance = sqrt(
@@ -94,10 +97,20 @@ def find_shortest_path(start_entrance, section_list):
             )
             distances[section] = distance
         # find the closest section
-        closest_section = min(distances, key=distances.get)
-        path.append(closest_section)
-        current_section = closest_section
-        visited.add(current_section)
+        if distances:
+            closest_section = min(distances, key=distances.get)
+            path.append(closest_section)
+            current_section = closest_section
+            visited.add(current_section)
 
     path.append("Checkout")  # always end at Checkout
     return path
+
+# get user input and find the shortest path
+start = input("Enter starting entrance ('Left' or 'Right'): ")
+start = start.strip().title()
+sections = input("Enter sections to visit (comma-separated): ").split(',')
+sections = [section.strip() for section in sections]
+
+shortest_path = find_shortest_path('Entrance Left' if start == 'Left' else 'Entrance Right', [section.title() for section in sections])
+print("Shortest path:", shortest_path)
