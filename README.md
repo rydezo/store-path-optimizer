@@ -25,4 +25,4 @@ The user inputs their starting entrance and the list of sections needed to visit
 
 The shortest path (based on distance to each nearest remaining section) is then returned.
 
-<sub>*this program could improve runtime and accuracy using Dijkstra's or nearest neighbor algorithms, and a deque data structure may be more efficient*
+<sub>*this program could improve runtime and accuracy using Dijkstra's or nearest neighbor algorithms, and a deque data structure may be more efficient. May be improved in the future*
