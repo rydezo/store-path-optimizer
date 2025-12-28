@@ -4,6 +4,8 @@ from math import sqrt
 
 # store coordinates for each section in the store
 store_coords = {
+"Entrance Left": (58, 9),
+"Entrance Right": (100, 9),
 
 # ---------- A (Grocery Wall) ----------
 "A1": (124, 25), "A2": (124, 26), "A3": (124, 28), "A4": (124, 30), # done
