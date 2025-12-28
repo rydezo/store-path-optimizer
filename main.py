@@ -27,8 +27,8 @@ store_coords = {
 # ---------- B (Women) ----------
 "B1": (112, 25), "B3": (108, 25), "B5": (106, 28), "B7": (103, 25),
 
+
 # ************************ TODO: STILL TO BE CORRECTLY MAPPED ************************
-"""
 # ---------- C (Mens / Intimates) ----------
 "C1": (60, 20), "C3": (58, 20), "C5": (56, 20), "C7": (54, 20),
 "C9": (52, 20), "C11": (50, 20), "C13": (48, 20),
@@ -82,7 +82,8 @@ store_coords = {
 "L9": (26, 48), "L11": (28, 48), "L13": (30, 48),
 "L15": (32, 48), "L17": (34, 48), "L19": (36, 48),
 "L21": (38, 48), "L23": (40, 48),
-"""
+# ************************ TODO: STILL TO BE CORRECTLY MAPPED ************************
+
 
 # ---------- Y (Garden) ----------
 "Y1": (15, 29), "YY1": (8, 35), "YY3": (0, 42), # done
@@ -94,18 +95,18 @@ store_coords = {
 
 # plot the store layout
 def plot_store_layout(coords):
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(16, 10))
     for section, (x, y) in coords.items():
         plt.scatter(x, y, label=section)
-        plt.text(x + 0.1, y + 0.1, section, fontsize=8)
+        plt.text(x + 0.01, y + 0.01, section, fontsize=6)
 
     plt.title("Store Layout")
     plt.xlabel("X Coordinate")
     plt.ylabel("Y Coordinate")
     plt.grid(True)
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
-    plt.xlim(0, 20)
-    plt.ylim(-1, 10)
+    plt.xlim(0, 160)
+    plt.ylim(0, 80)
     plt.show()
 
 plot_store_layout(store_coords)
