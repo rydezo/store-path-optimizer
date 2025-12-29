@@ -5,6 +5,8 @@ from math import sqrt
 # store coordinates for each section in the store
 with open("data/store_coords.json", "r") as f:
     store_coords = json.load(f)
+
+# convert back to tuple
 store_coords = {k: tuple(v) for k, v in store_coords.items()}
 
 # plot the store layout
