@@ -23,7 +23,6 @@ def plot_store_layout(coords):
     ax.set_xlabel("X Coordinate")
     ax.set_ylabel("Y Coordinate")
     ax.grid(True)
-    ax.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
     ax.set_xlim(0, 140)
     ax.set_ylim(0, 80)
 
