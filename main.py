@@ -1,15 +1,17 @@
 import json
 import matplotlib.pyplot as plt
 from math import sqrt
+from pathlib import Path
 
-# store coordinates for each section in the store
-with open("data/store_coords.json", "r") as f:
-    store_coords = json.load(f)
+# ---------- data loading ----------
+BASE_DIR = Path(__file__).resolve().parent
 
-# convert back to tuple
-store_coords = {k: tuple(v) for k, v in store_coords.items()}
+def load_store_coords():
+    with open(BASE_DIR / "data" / "store_coords.json", "r") as f:
+        coords = json.load(f)
+    return {k: tuple(v) for k, v in coords.items()}
 
-# plot the store layout
+# ---------- plotting ----------
 def plot_store_layout(coords):
     fig, ax = plt.subplots(figsize=(16, 10))
 
@@ -27,44 +29,35 @@ def plot_store_layout(coords):
 
     return fig
 
-# find shortest path
-def find_shortest_path(start_entrance, section_list):
+# ---------- pathfinding ----------
+def find_shortest_path(start_entrance, section_list, store_coords):
     path = []
     visited = set()
     current_section = start_entrance
+
+    # Remove invalid sections safely
+    section_list = [s for s in section_list if s in store_coords]
+
     while len(path) < len(section_list):
-        distances = dict()
+        distances = {}
+
         for section in section_list:
-            # check if section has not been visited and exists in store coordinates
             if section in visited:
                 continue
-            if section not in store_coords:
-                print(f"Section '{section}' not found in store coordinates. Please input your section again.")
-                section_list.remove(section)
-                new_section = input("Enter a valid section to visit: ").strip()
-                section_list.append(new_section.title())
-                continue
-            # use distance formula to calculate distance between sections
+
             distance = sqrt(
                 (store_coords[current_section][0] - store_coords[section][0]) ** 2 +
                 (store_coords[current_section][1] - store_coords[section][1]) ** 2
             )
             distances[section] = distance
-        # find the closest section
-        if distances:
-            closest_section = min(distances, key=distances.get)
-            path.append(closest_section)
-            current_section = closest_section
-            visited.add(current_section)
 
-    path.append("Checkout")  # always end at Checkout
+        if not distances:
+            break
+
+        closest_section = min(distances, key=distances.get)
+        path.append(closest_section)
+        visited.add(closest_section)
+        current_section = closest_section
+
+    path.append("Checkout")
     return path
-
-# get user input and find the shortest path
-start = input("Enter starting entrance ('Left' or 'Right'): ")
-start = start.strip().title()
-sections = input("Enter sections to visit (comma-separated): ").split(',')
-sections = [section.strip() for section in sections]
-
-shortest_path = find_shortest_path('Entrance Left' if start == 'Left' else 'Entrance Right', [section.title() for section in sections])
-print("Shortest path:", shortest_path)
