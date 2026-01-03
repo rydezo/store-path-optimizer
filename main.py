@@ -11,21 +11,21 @@ store_coords = {k: tuple(v) for k, v in store_coords.items()}
 
 # plot the store layout
 def plot_store_layout(coords):
-    plt.figure(figsize=(16, 10))
+    fig, ax = plt.subplots(figsize=(16, 10))
+
     for section, (x, y) in coords.items():
-        plt.scatter(x, y, label=section)
-        plt.text(x + 0.01, y + 0.01, section, fontsize=6)
+        ax.scatter(x, y, label=section)
+        ax.text(x + 0.01, y + 0.01, section, fontsize=6)
 
-    plt.title("Store Layout")
-    plt.xlabel("X Coordinate")
-    plt.ylabel("Y Coordinate")
-    plt.grid(True)
-    plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
-    plt.xlim(0, 160)
-    plt.ylim(0, 80)
-    plt.show()
+    ax.set_title("Store Layout")
+    ax.set_xlabel("X Coordinate")
+    ax.set_ylabel("Y Coordinate")
+    ax.grid(True)
+    ax.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
+    ax.set_xlim(0, 140)
+    ax.set_ylim(0, 80)
 
-plot_store_layout(store_coords)
+    return fig
 
 # find shortest path
 def find_shortest_path(start_entrance, section_list):

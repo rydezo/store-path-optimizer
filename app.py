@@ -1,2 +1,7 @@
 import streamlit as st
-st.write('Hello World')
+from main import plot_store_layout, store_coords
+
+fig = plot_store_layout(store_coords)
+
+st.title('Store Map')
+st.pyplot(fig)
