@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from math import sqrt
 from pathlib import Path
 
-# ---------- data loading ----------
+# data loading
 BASE_DIR = Path(__file__).resolve().parent
 
 def load_store_coords():
@@ -11,7 +11,7 @@ def load_store_coords():
         coords = json.load(f)
     return {k: tuple(v) for k, v in coords.items()}
 
-# ---------- plotting ----------
+# plotting
 def plot_store_layout(coords):
     fig, ax = plt.subplots(figsize=(16, 10))
 
@@ -28,7 +28,7 @@ def plot_store_layout(coords):
 
     return fig
 
-# ---------- pathfinding ----------
+# pathfinding
 def find_shortest_path(start_entrance, section_list, store_coords):
     path = []
     visited = set()
