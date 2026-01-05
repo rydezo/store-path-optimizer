@@ -37,7 +37,7 @@ if st.button("Submit Items"):
             break
 
         section, item = part.split(":", 1)
-        section = section.strip().title()
+        section = section.strip().upper()
         item = item.strip().title()
 
         if section not in valid_sections:
@@ -61,7 +61,7 @@ if st.session_state.invalid_section:
     )
 
     if st.button("Replace Section"):
-        replacement = replacement.title()
+        replacement = replacement.strip().upper()
         if replacement in valid_sections:
             for entry in st.session_state.shopping_items:
                 if entry["section"] == st.session_state.invalid_section:
