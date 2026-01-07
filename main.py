@@ -52,14 +52,13 @@ def plot_store_layout(coords, path=None):
 
 # pathfinding
 def find_shortest_path(start_entrance, section_list, store_coords):
-    path = []
+    path = [start_entrance]   # START HERE
     visited = set()
     current_section = start_entrance
 
-    # Remove invalid sections safely
     section_list = [s for s in section_list if s in store_coords]
 
-    while len(path) < len(section_list):
+    while len(visited) < len(section_list):
         distances = {}
 
         for section in section_list:
@@ -80,5 +79,5 @@ def find_shortest_path(start_entrance, section_list, store_coords):
         visited.add(closest_section)
         current_section = closest_section
 
-    path.append("Checkout")
+    path.append("Checkout")   # ALWAYS END AT CHECKOUT
     return path

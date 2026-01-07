@@ -3,17 +3,18 @@ from main import load_store_coords, plot_store_layout, find_shortest_path
 
 st.title("Store Path Optimizer")
 
-# load data
+# ---------- load data ----------
 store_coords = load_store_coords()
 valid_sections = set(store_coords.keys())
 
 # ---------- session state ----------
 if "shopping_items" not in st.session_state:
-    # each item: {"section": str, "item": str}
+    # each entry: {"section": str, "item": str}
     st.session_state.shopping_items = []
 
-if "invalid_section" not in st.session_state:
-    st.session_state.invalid_section = None
+if "invalid_index" not in st.session_state:
+    # index of invalid aisle in shopping_items
+    st.session_state.invalid_index = None
 
 # ---------- inputs ----------
 entrance = st.selectbox(
@@ -21,60 +22,72 @@ entrance = st.selectbox(
     ["Entrance Left", "Entrance Right"]
 )
 
-items_input = st.text_input(
-    "Items to pick up (format: Section: Item, Section: Item)",
-    placeholder="A1: Apples, B3: Milk, C15: Bread"
+raw_input = st.text_input(
+    "Items to pick up (Section or Section: Item)",
+    placeholder="A1, B3: Milk, C15: Bread"
 )
 
 if st.button("Submit Items"):
-    parsed_items = []
-    st.session_state.invalid_section = None
+    parsed = []
+    st.session_state.invalid_index = None
 
-    for part in items_input.split(","):
+    for part in raw_input.split(","):
         part = part.strip()
-        if ":" not in part:
-            st.session_state.invalid_section = part
-            break
+        if not part:
+            continue
 
-        section, item = part.split(":", 1)
+        # Split section and optional item
+        if ":" in part:
+            section, item = part.split(":", 1)
+            item = item.strip().title()
+        else:
+            section = part
+            item = "Item"
+
         section = section.strip().upper()
-        item = item.strip().title()
 
-        if section not in valid_sections:
-            st.session_state.invalid_section = section
-            break
+        parsed.append({
+            "section": section,
+            "item": item
+        })
 
-        parsed_items.append({"section": section, "item": item})
+    st.session_state.shopping_items = parsed
 
-    if not st.session_state.invalid_section:
-        st.session_state.shopping_items = parsed_items
+# ---------- aisle validation ----------
+for idx, entry in enumerate(st.session_state.shopping_items):
+    if entry["section"] not in valid_sections:
+        st.session_state.invalid_index = idx
+        break
 
-# ---------- validation / replacement ----------
-if st.session_state.invalid_section:
+# ---------- invalid aisle replacement ----------
+if st.session_state.invalid_index is not None:
+    bad_entry = st.session_state.shopping_items[st.session_state.invalid_index]
+
     st.error(
-        f"Section '{st.session_state.invalid_section}' not found in store coordinates."
+        f"Aisle '{bad_entry['section']}' not found in store layout."
     )
 
     replacement = st.text_input(
-        "Enter a valid section to visit:",
-        key="replacement_input"
+        "Enter a valid aisle:",
+        key="aisle_fix"
     )
 
-    if st.button("Replace Section"):
+    if st.button("Replace Aisle"):
         replacement = replacement.strip().upper()
-        if replacement in valid_sections:
-            for entry in st.session_state.shopping_items:
-                if entry["section"] == st.session_state.invalid_section:
-                    entry["section"] = replacement
 
-            st.session_state.invalid_section = None
+        if replacement in valid_sections:
+            st.session_state.shopping_items[
+                st.session_state.invalid_index
+            ]["section"] = replacement
+
+            st.session_state.invalid_index = None
             st.rerun()
         else:
-            st.warning("That section is also invalid. Please try again.")
+            st.warning("That aisle is still invalid.")
 
-# ---------- compute path ----------
+# ---------- compute + render ----------
 elif st.session_state.shopping_items:
-    sections = [entry["section"] for entry in st.session_state.shopping_items]
+    sections = [e["section"] for e in st.session_state.shopping_items]
 
     path = find_shortest_path(
         entrance,
@@ -82,12 +95,13 @@ elif st.session_state.shopping_items:
         store_coords
     )
 
+    # ---- Shortest Path ----
     st.subheader("Shortest Path")
     for step in path:
         matching_items = [
-            entry["item"]
-            for entry in st.session_state.shopping_items
-            if entry["section"] == step
+            e["item"]
+            for e in st.session_state.shopping_items
+            if e["section"] == step
         ]
 
         if matching_items:
@@ -96,35 +110,13 @@ elif st.session_state.shopping_items:
         else:
             st.write(f"➡️ **{step}**")
 
-# ---------- plot ----------
-st.subheader("Store Map")
-if st.session_state.shopping_items:
-    sections = [entry["section"] for entry in st.session_state.shopping_items]
-
-    path = find_shortest_path(
-        entrance,
-        sections,
-        store_coords
-    )
-
-    st.subheader("Shortest Path")
-    for step in path:
-        matching_items = [
-            entry["item"]
-            for entry in st.session_state.shopping_items
-            if entry["section"] == step
-        ]
-
-        if matching_items:
-            for item in matching_items:
-                st.write(f"🟦 **{step}** — {item}")
-        else:
-            st.write(f"➡️ **{step}**")
-
+    # ---- Store Map ----
+    st.subheader("Store Map")
     fig = plot_store_layout(store_coords, path)
+    st.pyplot(fig)
 
+# ---------- fallback ----------
 else:
+    st.subheader("Store Map")
     fig = plot_store_layout(store_coords)
-
-st.subheader("Store Map")
-st.pyplot(fig)
+    st.pyplot(fig)
