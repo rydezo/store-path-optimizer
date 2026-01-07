@@ -98,5 +98,33 @@ elif st.session_state.shopping_items:
 
 # ---------- plot ----------
 st.subheader("Store Map")
-fig = plot_store_layout(store_coords)
+if st.session_state.shopping_items:
+    sections = [entry["section"] for entry in st.session_state.shopping_items]
+
+    path = find_shortest_path(
+        entrance,
+        sections,
+        store_coords
+    )
+
+    st.subheader("Shortest Path")
+    for step in path:
+        matching_items = [
+            entry["item"]
+            for entry in st.session_state.shopping_items
+            if entry["section"] == step
+        ]
+
+        if matching_items:
+            for item in matching_items:
+                st.write(f"🟦 **{step}** — {item}")
+        else:
+            st.write(f"➡️ **{step}**")
+
+    fig = plot_store_layout(store_coords, path)
+
+else:
+    fig = plot_store_layout(store_coords)
+
+st.subheader("Store Map")
 st.pyplot(fig)

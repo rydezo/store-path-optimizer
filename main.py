@@ -12,14 +12,36 @@ def load_store_coords():
     return {k: tuple(v) for k, v in coords.items()}
 
 # plotting
-def plot_store_layout(coords):
+def plot_store_layout(coords, path=None):
     fig, ax = plt.subplots(figsize=(16, 10))
 
+    # Plot all sections
     for section, (x, y) in coords.items():
-        ax.scatter(x, y, label=section)
-        ax.text(x + 0.01, y + 0.01, section, fontsize=6)
+        ax.scatter(x, y)
+        ax.text(x + 0.5, y + 0.5, section, fontsize=6)
 
-    ax.set_title("Store Layout")
+    # Draw path if provided
+    if path:
+        path_x = [coords[section][0] for section in path]
+        path_y = [coords[section][1] for section in path]
+
+        ax.plot(path_x, path_y, linewidth=2, linestyle='--')
+
+        # Start marker
+        ax.scatter(
+            path_x[0], path_y[0],
+            s=120, marker='o'
+        )
+        ax.text(path_x[0] + 1, path_y[0] + 1, "START", fontsize=9)
+
+        # End marker (Checkout)
+        ax.scatter(
+            path_x[-1], path_y[-1],
+            s=120, marker='X'
+        )
+        ax.text(path_x[-1] + 1, path_y[-1] + 1, "CHECKOUT", fontsize=9)
+
+    ax.set_title("Store Layout with Optimized Path")
     ax.set_xlabel("X Coordinate")
     ax.set_ylabel("Y Coordinate")
     ax.grid(True)
