@@ -5,7 +5,7 @@ st.title("Store Path Optimizer")
 
 # ---------- load data ----------
 store_coords = load_store_coords()
-valid_sections = set(store_coords.keys())
+valid_sections = sorted(store_coords.keys())
 
 # ---------- session state ----------
 if "shopping_items" not in st.session_state:
@@ -13,7 +13,6 @@ if "shopping_items" not in st.session_state:
     st.session_state.shopping_items = []
 
 if "invalid_index" not in st.session_state:
-    # index of invalid aisle in shopping_items
     st.session_state.invalid_index = None
 
 # ---------- inputs ----------
@@ -44,10 +43,8 @@ if st.button("Submit Items"):
             section = part
             item = "Item"
 
-        section = section.strip().upper()
-
         parsed.append({
-            "section": section,
+            "section": section.strip().upper(),
             "item": item
         })
 
@@ -59,31 +56,25 @@ for idx, entry in enumerate(st.session_state.shopping_items):
         st.session_state.invalid_index = idx
         break
 
-# ---------- invalid aisle replacement ----------
+# ---------- invalid aisle replacement (AUTOCOMPLETE) ----------
 if st.session_state.invalid_index is not None:
     bad_entry = st.session_state.shopping_items[st.session_state.invalid_index]
 
-    st.error(
-        f"Aisle '{bad_entry['section']}' not found in store layout."
-    )
+    st.error(f"Aisle '{bad_entry['section']}' not found in store layout.")
 
-    replacement = st.text_input(
-        "Enter a valid aisle:",
-        key="aisle_fix"
+    replacement = st.selectbox(
+        "Select a valid aisle:",
+        options=valid_sections,
+        index=0
     )
 
     if st.button("Replace Aisle"):
-        replacement = replacement.strip().upper()
+        st.session_state.shopping_items[
+            st.session_state.invalid_index
+        ]["section"] = replacement
 
-        if replacement in valid_sections:
-            st.session_state.shopping_items[
-                st.session_state.invalid_index
-            ]["section"] = replacement
-
-            st.session_state.invalid_index = None
-            st.rerun()
-        else:
-            st.warning("That aisle is still invalid.")
+        st.session_state.invalid_index = None
+        st.rerun()
 
 # ---------- compute + render ----------
 elif st.session_state.shopping_items:
