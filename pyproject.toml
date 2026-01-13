@@ -1,10 +1,11 @@
 [project]
 name = "store-path-optimizer"
 version = "0.1.0"
-description = "Add your description here"
+description = "Streamlit app for optimizing in-store walking paths"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
+
 dependencies = [
-    "streamlit",
-    "matplotlib"
+    "streamlit>=1.32",
+    "matplotlib>=3.8"
 ]
