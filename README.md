@@ -31,6 +31,21 @@ A **Streamlit web app** that helps shoppers minimize walking distance in the Elk
 
 > The routing logic is greedy (nearest-neighbor), designed for clarity and speed rather than perfect optimality.
 
+### App Screenshots
+User inputs & distance comparison | Shortest path & store map displayed
+:-------------------------:|:-------------------------:
+<img width="1099" height="676" alt="image" src="https://github.com/user-attachments/assets/c676fd7f-80e3-42e9-afb5-da99e521314c" />  |  <img width="923" height="888" alt="image" src="https://github.com/user-attachments/assets/10d51348-25c7-4984-be74-8902030edfce" />
+
+
+
+---
+
+## Store Maps
+Full Store Map | Marking Map
+:-------------------------:|:-------------------------:
+<img width="3500" height="2150" alt="full store map" src="https://github.com/user-attachments/assets/3398c36f-892a-42a2-8e68-7958158ec3f1" />  This map was roughly amalgamated from the Store Map in the Walmart app to display most of the aisles relative to each other. |  <img width="3500" height="2150" alt="marking map image" src="https://github.com/user-attachments/assets/0c4d7da2-290e-4fcf-bcbb-342188d2e0a5" /> This map overlays the full store map with a grid and shows the marking done to approximate each of the 400+ aisle coordinates.
+
+---
 
 ## Try it Out
 https://store-path.streamlit.app/
