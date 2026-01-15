@@ -80,13 +80,46 @@ if st.session_state.invalid_index is not None:
 elif st.session_state.shopping_items:
     sections = [e["section"] for e in st.session_state.shopping_items]
 
-    path = find_shortest_path(
-        entrance,
+    path_left, dist_left = find_shortest_path(
+        "Entrance Left",
         sections,
-        store_coords
+        store_coords,
+        return_distance=True
     )
 
-    # ---- Shortest Path ----
+    path_right, dist_right = find_shortest_path(
+        "Entrance Right",
+        sections,
+        store_coords,
+        return_distance=True
+    )
+
+    # Choose displayed path based on user selection
+    if entrance == "Entrance Left":
+        path = path_left
+    else:
+        path = path_right
+
+    st.session_state.path = path
+
+    # ---------- Comparison ----------
+    st.subheader("Distance Comparison")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(
+            label="Entrance Left",
+            value=f"{dist_left} units"
+        )
+
+    with col2:
+        st.metric(
+            label="Entrance Right",
+            value=f"{dist_right} units"
+        )
+
+    # ---------- Shortest Path ----------
     st.subheader("Shortest Path")
     for step in path:
         matching_items = [
@@ -101,12 +134,17 @@ elif st.session_state.shopping_items:
         else:
             st.write(f"➡️ **{step}**")
 
-    # ---- Store Map ----
+    # ---------- Store Map ----------
     st.subheader("Store Map")
-    fig = plot_store_layout(store_coords, path)
+
+    fig = plot_store_layout(
+        store_coords,
+        st.session_state.path
+    )
+
     st.pyplot(fig)
 
-# ---------- fallback ----------
+# auto display map
 else:
     st.subheader("Store Map")
     fig = plot_store_layout(store_coords)

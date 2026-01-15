@@ -50,34 +50,40 @@ def plot_store_layout(coords, path=None):
 
     return fig
 
+def distance(a, b, coords):
+    return sqrt(
+        (coords[a][0] - coords[b][0]) ** 2 +
+        (coords[a][1] - coords[b][1]) ** 2
+    )
+
 # pathfinding
-def find_shortest_path(start_entrance, section_list, store_coords):
-    path = [start_entrance]   # START HERE
+def find_shortest_path(start_entrance, section_list, store_coords, return_distance=False):
+    path = []
     visited = set()
     current_section = start_entrance
+    total_distance = 0.0
 
-    section_list = [s for s in section_list if s in store_coords]
+    remaining = section_list.copy()
 
-    while len(visited) < len(section_list):
-        distances = {}
+    while remaining:
+        distances = {
+            section: distance(current_section, section, store_coords)
+            for section in remaining
+        }
 
-        for section in section_list:
-            if section in visited:
-                continue
+        closest = min(distances, key=distances.get)
+        total_distance += distances[closest]
 
-            distance = sqrt(
-                (store_coords[current_section][0] - store_coords[section][0]) ** 2 +
-                (store_coords[current_section][1] - store_coords[section][1]) ** 2
-            )
-            distances[section] = distance
+        path.append(closest)
+        visited.add(closest)
+        remaining.remove(closest)
+        current_section = closest
 
-        if not distances:
-            break
+    # always end at Checkout
+    total_distance += distance(current_section, "Checkout", store_coords)
+    path.append("Checkout")
 
-        closest_section = min(distances, key=distances.get)
-        path.append(closest_section)
-        visited.add(closest_section)
-        current_section = closest_section
+    if return_distance:
+        return path, round(total_distance, 2)
 
-    path.append("Checkout")   # ALWAYS END AT CHECKOUT
     return path
