@@ -100,7 +100,8 @@ elif st.session_state.shopping_items:
     else:
         path = path_right
 
-    st.session_state.path = path
+    visual_path = [entrance] + path
+    st.session_state.path = visual_path
 
     # ---------- Comparison ----------
     st.subheader("Distance Comparison")
