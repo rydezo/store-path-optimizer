@@ -1,10 +1,4 @@
-# Python
 __pycache__/
 *.py[cod]
-
-# VS Code Dev Container
 .devcontainer/
-
-# Poetry / Python version
 .python-version
-pyproject.toml
