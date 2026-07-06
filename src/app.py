@@ -1,5 +1,5 @@
 import streamlit as st
-from main import load_store_coords, plot_store_layout, find_shortest_path
+from src.main import load_store_coords, plot_store_layout, find_shortest_path
 
 st.title("Store Path Optimizer")
 
