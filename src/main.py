@@ -4,10 +4,10 @@ from math import sqrt
 from pathlib import Path
 
 # data loading
-BASE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 def load_store_coords():
-    with open(BASE_DIR / "data" / "store_coords.json", "r") as f:
+    with open(PROJECT_ROOT / "data" / "store_coords.json", "r", encoding="utf-8") as f:
         coords = json.load(f)
     return {k: tuple(v) for k, v in coords.items()}
 
